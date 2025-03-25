@@ -4,13 +4,6 @@ const registerLink = document.querySelector('.register-link');
 const btnPopup = document.querySelector('.btnLogin-popup');
 const iconClose = document.querySelector('.icon-close');
 
-function handleClickOutside(event) {
-    if (!wrapper.contains(event.target) && event.target !== btnPopup) {
-        wrapper.classList.remove('active-popup', 'active');
-        document.removeEventListener('click', handleClickOutside);
-    }
-}
-
 registerLink.addEventListener('click', () => {
     wrapper.classList.add('active');
 });
@@ -21,11 +14,19 @@ loginLink.addEventListener('click', () => {
 
 btnPopup.addEventListener('click', () => {
     wrapper.classList.add('active-popup');
-    wrapper.classList.remove('active'); // Сброс к форме логина
-    document.addEventListener('click', handleClickOutside);
 });
 
 iconClose.addEventListener('click', () => {
-    wrapper.classList.remove('active-popup', 'active');
-    document.removeEventListener('click', handleClickOutside);
+    wrapper.classList.remove('active-popup');
+});
+
+// Новый обработчик для клика вне попапа
+document.addEventListener('click', function(event) {
+    const isPopupActive = wrapper.classList.contains('active-popup');
+    const isClickInsidePopup = wrapper.contains(event.target);
+    const isLoginButton = event.target.closest('.btnLogin-popup');
+
+    if (isPopupActive && !isClickInsidePopup && !isLoginButton) {
+        wrapper.classList.remove('active-popup');
+    }
 });
